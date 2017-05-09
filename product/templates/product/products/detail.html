@@ -1,0 +1,49 @@
+{% extends 'product/base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {{ product.name }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="product-detail">
+        <h1>{{ product.name }}</h1>
+        <p class="price">${{ product.price }}</p>
+       <h2> {{ product.description|linebreaks }}</h2>
+    </div>
+<hr>
+
+
+    {% with comments.count as total_comments %}
+        <h3>{{ total_comments }} comment{{ total_comments|pluralize }}</h3>
+    {% endwith %}
+
+     {% for comment in comments %}
+                     <div class="comment">
+
+            <p class="info"> by {{ comment.name }} {{ comment.created }}</p>
+            {{ comment.text|linebreaks }}
+        </div>
+    {% empty %}
+        <p>There are no comments yet.</p>
+    {% endfor %}
+
+
+     {% if new_comment %}
+        <h3>Your comment has been added.</h3>
+    {% else %}
+        <h3>Add a new comment</h3>
+        <form action="#" method="post">
+            {{ comment_form.as_p }}
+            {% csrf_token %}
+            <p><input type="submit" value="Add comment"></p>
+        </form>
+    {%  endif %}
+{% endblock %}
+
+        
+        
+        

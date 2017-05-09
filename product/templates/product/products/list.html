@@ -1,0 +1,32 @@
+{% extends "product/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% trans "Products" %}
+{% endblock %}
+
+{% block content %}
+    <div id="sidebar">
+
+    </div>
+    <div id="main" class="product-list">
+        <h1>Products</h1>
+        <div class="products">
+
+        {% for product in products %}
+            <div class="item">
+
+                <a href="{{ product.get_absolute_url }}">{{ product.name }}</a><br>
+                ${{ product.price }}
+
+                <hr>
+
+            </div>
+        {% endfor %}
+        <div class="paginator">
+            {% include "product/pagination.html" with page=products %}
+        </div>
+        </div>
+    </div>
+{% endblock %}
