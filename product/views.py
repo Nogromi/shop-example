@@ -1,10 +1,44 @@
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib import messages
+
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Product, Comment
-from .forms import CommentForm
+from .forms import CommentForm,LoginForm
 from datetime import datetime, timedelta, date
 from datetime import datetime, timedelta
-import 
+
+
+
+
+def user_login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            user = authenticate(username=cd['username'], password=cd['password'])
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return HttpResponse('Authenticated successfully')
+                else:
+                    return HttpResponse('Disabled account')
+            else:
+                return HttpResponse('Invalid login')
+    else:
+        form = LoginForm()
+    return render(request, 'account/login.html', {'form': form})
+
+
+
+@login_required
+def dashboard(request):
+    return render(request, 'account/dashboard.html', {'section': 'dashboard'})
+
+
 
 def product_list(request):
 
@@ -41,14 +75,9 @@ def product_detail(request, slug):
 
     # List of active comments for this post
     # comments = product.comments.filter(active=True)
-
     now = datetime.now() - timedelta(days=1)
-    comments =  product.comments.filter(
-         created__gte=now)
-    created= comments[0].created
-    now = datetime.now()
-    print("created.day ", created.day)
-    print("now.day ", now.day)
+    comments = product.comments.filter(
+        created__gte=now)
 
 
 
