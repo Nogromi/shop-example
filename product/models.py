@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from datetime import datetime, timedelta
+from django.conf import settings
+
 class Product(models.Model):
     name = models.CharField(unique=True, max_length=100, db_index=True)
     slug = models.SlugField(max_length=100, db_index=True)
@@ -8,6 +10,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    users_like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='images_liked',blank=True)
 
     class Meta:
         ordering = ('-created',)
@@ -17,7 +20,7 @@ class Product(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('products:product_detail', args=[ self.slug])
+        return reverse('product_detail', args=[ self.slug])
 
 
 

@@ -15,8 +15,18 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.contrib.auth.views import *
+from product.admin import admin_site
 
 urlpatterns = [
+    url(r'^myadmin/', admin_site.urls),
+
+
     url(r'^admin/', admin.site.urls),
-    url(r'^products/', include('product.urls', ))
+    # login / logout urls
+    url(r'^login/$', login, name='login'),
+    url(r'^logout/$', logout, name='logout'),
+    url(r'^logout-then-login/$', logout_then_login, name='logout_then_login'),
+
+    url(r'^', include('product.urls'))
 ]
