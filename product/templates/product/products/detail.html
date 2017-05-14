@@ -1,12 +1,8 @@
 {% extends 'base.html' %}
-
 {% load i18n %}
 {% load static %}
 
-{% block title %}
-    {{ product.name }}
-{% endblock %}
-
+{% block title %}  {{ product.name }} {% endblock %}
 {% block content %}
 
     <div class="product-detail">
@@ -15,40 +11,45 @@
         <h2> {{ product.description|linebreaks }}</h2>
     </div>
     <hr>
-  {% with total_likes=product.users_like.count users_like=product.users_like.all %}
-        <div class="image-info">
-                <div>
+
+    <div class='col-sm-5 '>
+
+    </div>
+    <h3>{% with total_likes=product.users_like.count users_like=product.users_like.all %}</h3>
+        <div>
+            <div>
                     <span class="count">
                         <span class="total">{{ total_likes }}</span>
                         like{{ total_likes|pluralize }}
                     </span>
-                    <span class="count">
-                        <span class="total">{{ total_views }}</span>
-                        view{{ total_views|pluralize }}
-                    </span>
-                    <a href="#" data-id="{{ product.id }}" data-action="{% if request.user in users_like %}un{% endif %}like" class="like button">
-                        {% if request.user not in users_like %}
-                            Like
-                        {% else %}
-                            Unlike
-                        {% endif %}
-                    </a>
+
+                <a href="#" data-id="{{ product.id }}"
+
+                   data-action="{% if request.user in users_like %}un{% endif %}like" class=" button like">
+                    {% if request.user not in users_like %}
+                        Like
+                    {% else %}
+                        Unlike
+                    {% endif %}
+                </a>
+                <div class="error-message">
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if message.tags == "error" %}
+                                <p class="error-like">{{ message }}</p>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
                 </div>
+            </div>
+
+            {{ image.description|linebreaks }}
         </div>
 
-        <div class="image-likes">
-            {% for user in product.users_like.all %}
-                <div>
-                    <p>{{ user }}</p>
-                </div>
-            {% empty %}
-             <p>  Nobody likes this image yet.</p>
-            {% endfor %}
-        </div>
 
     {% endwith %}
 
-
+    <br>
     {% with comments.count as total_comments %}
         <h3>{{ total_comments }} comment{{ total_comments|pluralize }}</h3>
     {% endwith %}
@@ -64,9 +65,9 @@
 
 
     {% if new_comment %}
-        <h3>Your comment has been added.</h3>
+        <h4>Your comment has been added.</h4>
     {% else %}
-        <h3>Add a new comment</h3>
+        <h4>Add a new comment</h4>
         <form action="#" method="post">
             {{ comment_form.as_p }}
             {% csrf_token %}
@@ -75,6 +76,42 @@
     {% endif %}
 {% endblock %}
 
-        
-        
-        
+
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            $('a.like').click(function (e) {
+                e.preventDefault();
+
+                var $this = $(this);
+                $.post('{% url "like" %}', {
+                    id: $this.data('id'),
+                    action: $this.data('action')
+                }).done(function (data) {
+                    if (data.status == 'ok') {
+                        var previous_action = $('a.like').data('action');
+
+                        // toggle data-action
+                        $('a.like').data('action', previous_action == 'like' ? 'unlike' : 'like');
+                        // toggle link text
+                        $('a.like').text(previous_action == 'like' ? 'Unlike' : 'Like');
+
+                        // update total likes
+                        var previous_likes = parseInt($('span.count .total').text());
+                        $('span.count .total').text(previous_action == 'like' ? previous_likes + 1 : previous_likes - 1);
+
+                    }
+                    else {
+                        alert("Please login or register to put the Like");
+                        location.reload();
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+
+
+
+
