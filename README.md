@@ -16,7 +16,7 @@ python manage.py createsuperuser --settings=myshop.settings.productio
 ...
 ...
 
-Step 4
+Step 5
 python manage.py runserver --settings=myshop.settings.production
 
 DESCRIPTION:
