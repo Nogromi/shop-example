@@ -74,8 +74,12 @@ WSGI_APPLICATION = 'myshop.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'product_db',
+        'USER': 'postgres',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '5433',
     }
 }
 
@@ -114,7 +118,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = "/static/"
 from django.core.urlresolvers import reverse_lazy
 
 LOGIN_REDIRECT_URL = reverse_lazy('product_list')

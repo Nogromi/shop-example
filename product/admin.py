@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin import AdminSite
-from .models import Product, Comment
+from .models import Product, Comment, Profile
 
 
 # Register your models here.
@@ -21,11 +21,9 @@ class CommentAdmin(admin.ModelAdmin):
 admin.site.register(Comment, CommentAdmin)
 
 
-class MyAdminSite(AdminSite):
-    site_url = '127.0.0.1:8000/products/'
-
-
-admin_site = MyAdminSite(name='myadmin')
-admin_site.register(Product, ProductAdmin)
-
-admin_site.register(Comment, CommentAdmin)
+#
+# admin_site = MyAdminSite(name='myadmin')
+# admin_site.register(Product, ProductAdmin)
+#
+# admin_site.register(Comment, CommentAdmin)
+# admin_site.register(Profile)

@@ -9,11 +9,7 @@
 
 {% block content %}
     <div id="users">
-
-        <button class=" button button sort  " data-sort="like">
-            Sort by likes
-        </button>
-
+        <button class=" button button sort  " data-sort="like">Sort by likes</button>
         <div class="list">
             {% if products|length > 0 %}
                 {% for product in products|dictsortreversed:"users_like.count" %}
@@ -28,13 +24,11 @@
                 <h1> No products are available. Visit admin page for populate</h1>
             {% endif %}
         </div>
-
     </div>
     <div class="paginator">
         {% include "product/pagination.html" with page=products %}
     </div>
-    </div>
-    </div>
+
 {% endblock %}
 
 

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from .forms import LoginForm, UserRegistrationForm
-
+from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Product, Comment, Profile
 from .forms import CommentForm, LoginForm
@@ -14,7 +14,8 @@ from datetime import datetime, timedelta, date
 from datetime import datetime, timedelta
 from  django.contrib import messages
 
-
+def index(request):
+    return redirect("/products/")
 # def user_login(request):
 #     if request.method == 'POST':
 #         form = LoginForm(request.POST)
@@ -32,6 +33,8 @@ from  django.contrib import messages
 #     else:
 #         form = LoginForm()
 #     return render(request, 'account/login.html', {'form': form})
+
+
 
 def register(request):
     if request.method == 'POST':
@@ -103,6 +106,7 @@ def product_detail(request, slug):
             # Save the comment to the database
             new_comment.save()
             messages.success(request, 'Thank you for the comment')
+
     else:
         comment_form = CommentForm(
             initial={'name': request.user.username if request.user.is_authenticated else "anonymous"})
@@ -123,10 +127,8 @@ def product_like(request):
                 product = Product.objects.get(id=product_id)
                 if action == 'like':
                     product.users_like.add(request.user)
-                    messages.success(request, 'Liked')
-
+                elif action == 'unlike':
                     product.users_like.remove(request.user)
-                    messages.success(request, 'Unliked')
 
                 return JsonResponse({
                     'status': 'ok'

@@ -2,7 +2,6 @@ from django.test import TestCase
 from .models import Product, Profile, Comment
 import datetime
 from django.urls import reverse
-
 class ProductTestCase(TestCase):
     def setUp(self):
         self.p = Product.objects.create(name="Test Product", slug='test-product', description="test-description",
