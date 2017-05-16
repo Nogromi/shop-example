@@ -15,14 +15,18 @@
         </button>
 
         <div class="list">
-            {% for product in products|dictsortreversed:"users_like.count" %}
-                <div class="item">
-                    <a href="{{ product.get_absolute_url }}" class="name">{{ product.name }}</a><br>
-                    ${{ product.price }}<br>
-                    <p class="like">{{ product.users_like.count }} like{{ product.users_like.count|pluralize }}</p>
-                    <hr>
-                </div>
-            {% endfor %}
+            {% if products|length > 0 %}
+                {% for product in products|dictsortreversed:"users_like.count" %}
+                    <div class="item">
+                        <a href="{{ product.get_absolute_url }}" class="name">{{ product.name }}</a><br>
+                        ${{ product.price }}<br>
+                        <p class="like">{{ product.users_like.count }} like{{ product.users_like.count|pluralize }}</p>
+                        <hr>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <h1> No products are available. Visit admin page for populate</h1>
+            {% endif %}
         </div>
 
     </div>

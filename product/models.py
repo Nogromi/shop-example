@@ -26,7 +26,7 @@ class Product(models.Model):
 
 class Comment(models.Model):
     product = models.ForeignKey(Product, related_name='comments')
-    name = models.CharField(max_length=80, default="anonymous")
+    name = models.CharField(max_length=80, )
     # email = models.EmailField()
     text = models.TextField()
     created = models.DateTimeField(auto_now_add=True)

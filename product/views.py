@@ -104,7 +104,8 @@ def product_detail(request, slug):
             new_comment.save()
             messages.success(request, 'Thank you for the comment')
     else:
-        comment_form = CommentForm()
+        comment_form = CommentForm(
+            initial={'name': request.user.username if request.user.is_authenticated else "anonymous"})
 
     return render(request, 'product/products/detail.html', {'product': product,
                                                             'comments': comments,
@@ -121,11 +122,8 @@ def product_like(request):
             try:
                 product = Product.objects.get(id=product_id)
                 if action == 'like':
-
                     product.users_like.add(request.user)
                     messages.success(request, 'Liked')
-
-                elif action == 'unlike':
 
                     product.users_like.remove(request.user)
                     messages.success(request, 'Unliked')

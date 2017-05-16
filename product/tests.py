@@ -1,19 +1,33 @@
 from django.test import TestCase
-from .models import Product,Profile
-from django.contrib.auth.models import User
+from .models import Product, Profile, Comment
 import datetime
+from django.urls import reverse
 
 class ProductTestCase(TestCase):
     def setUp(self):
-        # self.user=Profile.objects.create('TestUser','fistnametest','test@user.com', 'mypassmypass', 'mypassmypass',)
-        self.p= Product.objects.create(name="Test Product", slug= 'test-product', description="test-description", price=10.90,created=datetime.datetime.now()-datetime.timedelta(days=2), updated=datetime.datetime.now(),)
+        self.p = Product.objects.create(name="Test Product", slug='test-product', description="test-description",
+                                        price=10.90, created=datetime.datetime.now() - datetime.timedelta(days=2),
+                                        updated=datetime.datetime.now() )
+
 
 
     def test_products_get_url(self):
-
+        """
+            Test that product has absolute url
+        """
         self.assertEqual(self.p.get_absolute_url(), "/test-product/")
-        #
-        # TestProduct = Product.objects.get(name="Test Product")
-        # TestProduct2 = Product.objects.get(name="Test Product2")
-        # self.assertEqual(TestProduct.get_absolute_url(), '/test-product')
-        # self.assertEqual(TestProduct2.get_absolute_url(), '/test-product2')
+
+    def test_product_list_view(self):
+        """
+            Test that list page  exists
+        """
+        response = self.client.get(reverse('product_list'))
+        self.assertEqual(response.status_code, 200)
+
+
+    def test_product_detail_view(self):
+        """
+            Test that detail page exists
+        """
+        response = self.client.get(reverse('product_detail', args=[self.p.slug]))
+        self.assertEqual(response.status_code, 200)
